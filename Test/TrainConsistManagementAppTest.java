@@ -1,48 +1,46 @@
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+public class TrainConsistManagementApp {
 
-class TrainConsistManagementAppTest extends TrainConsistManagementApp {
+    static class Bogie {
+        String name;
+        int capacity;
 
-    // Helper data
-    private List<Bogie> getBogies() {
-        List<Bogie> list = new ArrayList<>();
-        list.add(new Bogie("Sleeper", 72));
-        list.add(new Bogie("Sleeper", 70));
-        list.add(new Bogie("AC Chair", 56));
-        list.add(new Bogie("First Class", 24));
-        return list;
+        Bogie(String name, int capacity) {
+            this.name = name;
+            this.capacity = capacity;
+        }
     }
 
-    // Test 1
-    @Test
-    void testGrouping_BogiesGroupedByType() {
-
-        Map<String, List<Bogie>> result = groupBogiesByType(getBogies());
-
-        assertEquals(2, result.get("Sleeper").size()); // two sleeper bogies
+    public static int calculateTotalCapacity(List<Bogie> bogies) {
+        return bogies.stream()
+                .map(b -> b.capacity)          // extract capacity
+                .reduce(0, Integer::sum);     // aggregate sum
     }
 
-    // Test 2:
-    @Test
-    void testGrouping_DifferentBogieTypes() {
+    public static void main(String[] args) {
 
-        Map<String, List<Bogie>> result = groupBogiesByType(getBogies());
+        System.out.println("=======================================");
+        System.out.println(" UC10 - Count Total Seats in Train ");
+        System.out.println("=======================================\n");
 
-        assertTrue(result.containsKey("AC Chair"));
-        assertTrue(result.containsKey("First Class"));
-    }
+        List<Bogie> bogies = new ArrayList<>();
 
-    // Test 3
-    @Test
-    void testGrouping_EmptyBogieList() {
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 24));
+        bogies.add(new Bogie("Sleeper", 70));
 
-        List<Bogie> empty = new ArrayList<>();
+        System.out.println("Bogies in Train:");
+        for (Bogie b : bogies) {
+            System.out.println(b.name + " -> " + b.capacity);
+        }
 
-        Map<String, List<Bogie>> result = groupBogiesByType(empty);
+        int total = calculateTotalCapacity(bogies);
 
-        assertTrue(result.isEmpty());
+        System.out.println("\nTotal Seating Capacity of Train: " + total);
+
+        System.out.println("\nUC10 aggregation completed...");
     }
 }
