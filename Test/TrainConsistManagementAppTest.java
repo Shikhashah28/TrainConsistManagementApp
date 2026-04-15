@@ -1,48 +1,42 @@
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
-import java.util.*;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-import static org.junit.jupiter.api.Assertions.*;
+public class TrainConsistManagementApp {
 
-class TrainConsistManagementAppTest extends TrainConsistManagementApp {
-
-    // Helper data
-    private List<Bogie> getBogies() {
-        List<Bogie> list = new ArrayList<>();
-        list.add(new Bogie("Sleeper", 72));
-        list.add(new Bogie("Sleeper", 70));
-        list.add(new Bogie("AC Chair", 56));
-        list.add(new Bogie("First Class", 24));
-        return list;
+    public static boolean validateTrainID(String trainId) {
+        Pattern pattern = Pattern.compile("TRN-\\d{4}");
+        Matcher matcher = pattern.matcher(trainId);
+        return matcher.matches();
     }
 
-    // Test 1
-    @Test
-    void testGrouping_BogiesGroupedByType() {
-
-        Map<String, List<Bogie>> result = groupBogiesByType(getBogies());
-
-        assertEquals(2, result.get("Sleeper").size()); // two sleeper bogies
+    public static boolean validateCargoCode(String cargoCode) {
+        Pattern pattern = Pattern.compile("PET-[A-Z]{2}");
+        Matcher matcher = pattern.matcher(cargoCode);
+        return matcher.matches();
     }
 
-    // Test 2:
-    @Test
-    void testGrouping_DifferentBogieTypes() {
+    public static void main(String[] args) {
 
-        Map<String, List<Bogie>> result = groupBogiesByType(getBogies());
+        System.out.println("=======================================");
+        System.out.println(" UC11 - Validate Train ID and Cargo Code ");
+        System.out.println("=======================================\n");
 
-        assertTrue(result.containsKey("AC Chair"));
-        assertTrue(result.containsKey("First Class"));
-    }
+        Scanner scanner = new Scanner(System.in);
 
-    // Test 3
-    @Test
-    void testGrouping_EmptyBogieList() {
+        System.out.print("Enter Train ID (Format: TRN-1234): ");
+        String trainId = scanner.nextLine();
 
-        List<Bogie> empty = new ArrayList<>();
+        System.out.print("Enter Cargo Code (Format: PET-AB): ");
+        String cargoCode = scanner.nextLine();
 
-        Map<String, List<Bogie>> result = groupBogiesByType(empty);
+        boolean isTrainValid = validateTrainID(trainId);
+        boolean isCargoValid = validateCargoCode(cargoCode);
 
-        assertTrue(result.isEmpty());
+        System.out.println("\nValidation Results:");
+        System.out.println("Train ID Valid: " + isTrainValid);
+        System.out.println("Cargo Code Valid: " + isCargoValid);
+
+        System.out.println("\nUC11 validation completed...");
     }
 }
