@@ -1,42 +1,31 @@
-import java.util.Scanner;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import org.junit.jupiter.api.Test;
+import java.util.*;
 
-public class TrainConsistManagementApp {
+import static org.junit.jupiter.api.Assertions.*;
 
-    public static boolean validateTrainID(String trainId) {
-        Pattern pattern = Pattern.compile("TRN-\\d{4}");
-        Matcher matcher = pattern.matcher(trainId);
-        return matcher.matches();
+class TrainConsistManagementAppTest extends TrainConsistManagementApp {
+
+    @Test
+    void testSafety_AllBogiesValid() {
+        List<GoodsBogie> list = new ArrayList<>();
+        list.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        list.add(new GoodsBogie("Open", "Coal"));
+
+        assertTrue(isTrainSafe(list));
     }
 
-    public static boolean validateCargoCode(String cargoCode) {
-        Pattern pattern = Pattern.compile("PET-[A-Z]{2}");
-        Matcher matcher = pattern.matcher(cargoCode);
-        return matcher.matches();
+    @Test
+    void testSafety_CylindricalWithInvalidCargo() {
+        List<GoodsBogie> list = new ArrayList<>();
+        list.add(new GoodsBogie("Cylindrical", "Coal"));
+
+        assertFalse(isTrainSafe(list));
     }
 
-    public static void main(String[] args) {
+    @Test
+    void testSafety_EmptyBogieList() {
+        List<GoodsBogie> list = new ArrayList<>();
 
-        System.out.println("=======================================");
-        System.out.println(" UC11 - Validate Train ID and Cargo Code ");
-        System.out.println("=======================================\n");
-
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter Train ID (Format: TRN-1234): ");
-        String trainId = scanner.nextLine();
-
-        System.out.print("Enter Cargo Code (Format: PET-AB): ");
-        String cargoCode = scanner.nextLine();
-
-        boolean isTrainValid = validateTrainID(trainId);
-        boolean isCargoValid = validateCargoCode(cargoCode);
-
-        System.out.println("\nValidation Results:");
-        System.out.println("Train ID Valid: " + isTrainValid);
-        System.out.println("Cargo Code Valid: " + isCargoValid);
-
-        System.out.println("\nUC11 validation completed...");
+        assertTrue(isTrainSafe(list)); // no violations → safe
     }
 }
